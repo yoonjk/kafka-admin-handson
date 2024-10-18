@@ -1,0 +1,22 @@
+# Kafka server management 
+
+[Unit]
+Description=Apache Kafka server (broker)
+Documentation=http://kafka.apache.org/documentation.html
+Requires=network.target remote-fs.target zookeeper.service
+After=network.target remote-fs.target zookeeper.service
+
+[Service]
+Type=simple
+User=root
+Group=root
+Environment="KAFKA_HEAP_OPTS=-Xmx256M -Xms128M"
+Environment="KAFKA_OPTS=-javaagent:/app/manager/prometheus/jmx_prometheus_javaagent-1.0.1.jar=8080:/app/manager/prometheus/kafka-0-8-2.yml"
+ExecStart=/app/kafka/bin/kafka-server-start.sh /app/kafka/config/server.properties
+ExecStop=/app/kafka/bin/kafka-server-stop.sh
+Restart=on-abnormal
+TimeoutSec=20
+SuccessExitStatus=130 143
+
+[Install]
+WantedBy=multi-user.target

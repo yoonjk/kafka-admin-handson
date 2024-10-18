@@ -1,0 +1,23 @@
+# Zookeeper server management 
+
+[Unit]
+Description=Apache Zookeeper server (Kafka-embedded)
+Documentation=http://zookeeper.apache.org
+Requires=network.target remote-fs.target
+After=network.target remote-fs.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+SysLogIdentifier=zookeeper
+Environment="EXTRA_ARGS=-javaagent:/app/manager/prometheus/jmx_prometheus_javaagent-1.0.1.jar=8090:/app/manager/prometheus/zookeeper.yaml"
+ExecStart=/app/kafka/bin/zookeeper-server-start.sh /app/kafka/config/zookeeper.properties
+ExecStop=/app/kafka/bin/zookeeper-server-stop.sh
+Restart=on-abnormal
+SuccessExitStatus=130 143
+TimeoutSec=20
+
+[Install]
+WantedBy=multi-user.target
+

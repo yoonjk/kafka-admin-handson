@@ -1,0 +1,14 @@
+version: '3.6'
+services:
+  kafka_manager:
+    image: hlebalbau/kafka-manager:stable
+    container_name: kafka-manager
+    ports:
+      - "8200:9000"
+    environment:
+      ZK_HOSTS: "zookeeper1:2181,zookeeper2:2181,zookeeper3:2181"
+      APPLICATION_SECRET: "random-secret"
+    extra_hosts:
+      - "zookeeper1:10.117.25.140"
+      - "zookeeper2:10.117.25.151"
+      - "zookeeper3:10.66.219.170"

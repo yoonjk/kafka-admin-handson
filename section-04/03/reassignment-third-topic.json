@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "partitions": [
+      {
+        "topic": "third-topic",
+        "partition": 0,
+        "replicas": [
+          1
+        ],
+        "log_dirs": [
+          "any"
+        ]
+      },
+      {
+        "topic": "third-topic",
+        "partition": 1,
+        "replicas": [
+          2
+        ],
+        "log_dirs": [
+          "any"
+        ]
+      },
+      {
+        "topic": "third-topic",
+        "partition": 2,
+        "replicas": [
+          3
+        ],
+        "log_dirs": [
+          "any"
+        ]
+      }
+    ]
+  }

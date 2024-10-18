@@ -1,0 +1,18 @@
+[Unit]
+Descrition=Prometheus Server for monitoring kafka
+Documentation=https://prometheus.io/docs/introduction/overview/
+After=network-online.target
+
+
+[Service]
+User=root
+Group=root
+ExecStart=/app/manager/prometheus/prometheus --config.file=/app/manager/prometheus/config/prometheus.yml --storage.tsdb.path=/app/manager/prometheus/data --web.enable-lifecycle
+ExecStop=/bin/bash -c "curl -X POST localhost:9090/-/quit"
+TimeoutSec=20
+Restart=always
+SuccessExitStatus=130 143
+
+[Install]
+WantedBy=multi-user.target
+

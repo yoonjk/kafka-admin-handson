@@ -1,0 +1,18 @@
+# grafana service
+
+[Unit]
+Description=Grafana Server
+Documentation=https://grafana.com/docs
+After=network.target remote-fs.target
+Requires=network.target remote-fs.target
+
+[Service]
+Type=Simple
+User=root
+Group=root
+WorkingDirectory=/app/manager/grafana
+ExecStart=/app/manager/grafana/bin/grafana-server
+
+[Install]
+WantedBy=multi-user.target
+
