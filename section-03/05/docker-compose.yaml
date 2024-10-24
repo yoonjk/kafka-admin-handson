@@ -1,0 +1,37 @@
+version: '3.6'
+
+services:
+  akhq:
+    image: tchiotludo/akhq
+    container_name: akhq
+    restart: unless-stopped
+    environment:
+      AKHQ_CONFIGURATION: |
+        akhq:
+          connections:
+            docker-kafka-server:
+              properties:
+                bootstrap.servers: "kafka1:9092,kafka2:9092,kafka3:9092"
+              schema-registry:
+                url: "http://schema-registry:8085"
+    ports:
+      - "8200:8080"
+    extra_hosts:
+      - "kafka1:10.117.25.140"
+      - "kafka2:10.117.25.151"
+      - "kafka3:10.66.219.170"
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:${CONFLUENT_VERSION:-latest}
+    restart: unless-stopped
+    ports:
+      - "8085:8085"
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'PLAINTEXT://kafka1:9092,kafka2:9092,kafka3:9092'
+      SCHEMA_REGISTRY_HOST_NAME: 'schema-registry'
+      SCHEMA_REGISTRY_LISTENERS: 'http://0.0.0.0:8085'
+      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: 'INFO'
+    extra_hosts:
+      - "kafka1:10.117.25.140"
+      - "kafka2:10.117.25.151"
+      - "kafka3:10.66.219.170"
