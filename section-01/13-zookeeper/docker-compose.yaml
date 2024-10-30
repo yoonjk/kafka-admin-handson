@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+  # https://github.com/elkozmon/zoonavigator
+  zoonavigator:
+    image: elkozmon/zoonavigator:latest
+    container_name: zoonavigator
+    environment:
+      HTTP_PORT: 9000
+    restart: always
+    ports:
+      - "9000:9000"
+    extra_hosts:
+     - "zookeeper1:10.117.25.140"
+     - "zookeeper2:10.117.25.151"
+     - "zookeeper3:10.66.219.170"
