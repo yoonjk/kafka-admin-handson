@@ -25,3 +25,25 @@ jdk 설치하기
 ```bash
 yum install -y java-11-openjdk-devel.x86_64
 ```
+
+## kafka download
+```bash
+yum update -y
+yum install -y yum-utils tar nc git net-tools jq
+wget https://archive.apache.org/dist/kafka/2.8.2/kafka_2.13-2.8.2.tgz
+mkdir /app
+tar xvzf kafka_2.13-2.8.2.tgz  -C /app
+cd /app
+mv kafka_2.13-2.8.2  kafka
+mkdir /app/zookeeper
+```
+
+## stop minikube
+```bash
+minikube stop
+```
+
+#### 사용포트 확인 
+```bash
+netstat -ntup
+```
