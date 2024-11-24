@@ -1,0 +1,9 @@
+kafka:
+  clusters:
+    - bootstrapServers: kafka1:9092,kafka2:9092,kafka3:9092
+      name: kafka-source
+      metrics:
+        type: JMX
+        port: 8080
+    - bootstrapServers: kafka5:9092
+      name: kafka-target        

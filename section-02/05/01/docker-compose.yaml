@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    volumes:
+      - ./config/config.yml:/etc/kafkaui/dynamic_config.yaml
+    environment:
+      DYNAMIC_CONFIG_ENABLED: 'true'
+    ports:
+      - '8090:8080'
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider localhost:8080 || exit 1
+      interval: 5s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    extra_hosts:
+      - "kafka1:10.117.25.140"
+      - "kafka2:10.117.25.151"
+      - "kafka3:10.66.219.170"
+      - "kafka5:10.117.25.157"
