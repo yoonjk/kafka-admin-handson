@@ -1,0 +1,19 @@
+[Unit]
+Description=Mirror Maker 2 service
+After=network.target
+
+#StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+LimitNOFILE=49152
+User=root
+Environment=JAVA_HOME=/usr/lib/jvm/java-11-openjdk-11.0.20.1.1-2.el9.x86_64
+ExecStart=/app/kafka/bin/connect-mirror-maker.sh /app/kafka/config/mm2.properties
+#Output to syslog
+StandardOutput=syslog
+#Change this to find app logs in /var/log/syslog
+SyslogIdentifier=mm2
+
+[Install]
+WantedBy=multi-user.target

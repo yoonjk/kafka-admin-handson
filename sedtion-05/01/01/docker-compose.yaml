@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  # Source DB's
+  oracle:
+    image: container-registry.oracle.com/database/express:21.3.0-xe
+    container_name: oracle
+    environment:
+      - ORACLE_PWD=Admin12340
+      - ORACLE_CHARACTERSET=KO16MSWIN949
+    volumes:
+      - oradata:/opt/oracle/oradata
+    ports:
+      - 1521:1521
+
+  # Sinks DB's
+  postgres:
+    # *-----------------------------*
+    # To connect to the DB:
+    #   docker exec -it postgres bash -c 'psql -U $POSTGRES_USER $POSTGRES_DB'
+    # *-----------------------------*
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - PGDATA=/data/postgres
+    volumes:
+      - postgres-db:/data/postgres
+    ports:
+      - 5432:5432
+ 
+volumes:
+  oradata: {}
