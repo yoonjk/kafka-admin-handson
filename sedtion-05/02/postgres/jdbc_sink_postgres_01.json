@@ -7,7 +7,7 @@
                 "connection.user": "postgres",
                 "connection.password": "admin1234",
                 "table.name.format": "account",
-                "topics": "demo.source_db.account",
+                "topics": "test.source_db.account",
                 "auto.create": "true",
                 "auto.evolve": "true",
                 "delete.enabled": "true",

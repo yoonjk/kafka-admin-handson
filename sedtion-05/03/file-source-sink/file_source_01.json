@@ -1,0 +1,8 @@
+{
+  "name": "file_source_01",
+  "config": {
+    "connector.class": "org.apache.kafka.connect.file.FileStreamSourceConnector",
+    "file": "/data/source.txt",
+    "topic": "file-topic"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "file_sink_01",
+  "config": {
+    "connector.class": "org.apache.kafka.connect.file.FileStreamSinkConnector",
+    "file": "/data/sink.txt",
+    "topics": "file-topic"
+  }
+}
+
