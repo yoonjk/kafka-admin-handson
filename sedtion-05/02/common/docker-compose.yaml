@@ -1,0 +1,24 @@
+version: '2'
+services:
+  mysql_master:
+    image: mysql:8.0.23 # 이미지
+    container_name: mysql-source      
+    ports:
+      - 3306:3306
+    environment:
+     - MYSQL_ROOT_PASSWORD=debezium
+     - MYSQL_USER=mysqluser
+     - MYSQL_PASSWORD=mysqlpw
+    security_opt:
+      - seccomp:unconfined
+  mysql_replica:
+    image: mysql:8.0.23 # 이미지  
+    container_name: mysql-target  
+    ports:
+      - 3307:3306
+    environment:
+     - MYSQL_ROOT_PASSWORD=debezium
+     - MYSQL_USER=mysqluser
+     - MYSQL_PASSWORD=mysqlpw
+    security_opt:
+      - seccomp:unconfined

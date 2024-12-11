@@ -1,0 +1,18 @@
+{
+        "name": "jdbc_source_postgres_02",
+        "config": {
+                "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+                "tasks.max": "1",
+                "database.hostname": "10.117.25.161",
+                "database.port": "5431",
+                "database.user": "postgres",
+                "database.password": "admin1234",
+                "database.dbname" : "postgres",
+                "topic.prefix": "source-postgres",
+                "table.include.list": "public.employees",
+        	"schema.history.internal.kafka.bootstrap.servers": "kafka1:9092",
+        	"schema.history.internal.kafka.topic": "employee_history",
+                "plugin.name": "pgoutput",
+                "time.precision.mode": "connect"
+        }
+}
