@@ -1,0 +1,71 @@
+mkdir -p /opt/oracle/oradata/recovery_area
+sqlplus /nolog <<- EOF
+	CONNECT sys/top_secret AS SYSDBA
+	alter system set db_recovery_file_dest_size = 10G;
+	alter system set db_recovery_file_dest = '/opt/oracle/oradata/recovery_area' scope=spfile;
+	shutdown immediate
+	startup mount
+	alter database archivelog;
+	alter database open;
+	archive log list
+	exit;
+EOF
+
+# Enable LogMiner required database features/settings
+sqlplus sys/Admin12340@//localhost:1521/XE as sysdba <<- EOF
+  ALTER DATABASE ADD SUPPLEMENTAL LOG DATA;
+  ALTER PROFILE DEFAULT LIMIT FAILED_LOGIN_ATTEMPTS UNLIMITED;
+  exit;
+EOF
+
+# Create Log Miner Tablespace and User
+sqlplus sys/Admin12340@//localhost:1521/XE as sysdba <<- EOF
+  CREATE TABLESPACE LOGMINER_TBS DATAFILE '/opt/oracle/oradata/XE/logminer_tbs.dbf' SIZE 25M REUSE AUTOEXTEND ON MAXSIZE UNLIMITED;
+  exit;
+EOF
+
+sqlplus sys/Admin12340@//localhost:1521/XEPDB1 as sysdba <<- EOF
+  CREATE TABLESPACE LOGMINER_TBS DATAFILE '/opt/oracle/oradata/XE/XEPDB1/logminer_tbs.dbf' SIZE 25M REUSE AUTOEXTEND ON MAXSIZE UNLIMITED;
+  exit;
+EOF
+
+
+sqlplus sys/Admin12340@//localhost:1521/XE as sysdba <<- EOF
+  alter session set "_ORACLE_SCRIPT"=true;
+  CREATE USER user01 IDENTIFIED BY admin1234 DEFAULT TABLESPACE LOGMINER_TBS QUOTA UNLIMITED ON LOGMINER_TBS CONTAINER=ALL; 
+
+  GRANT CREATE SESSION TO user01 CONTAINER=ALL;
+  GRANT SET CONTAINER TO user01 CONTAINER=ALL;
+  GRANT SELECT ON V_$DATABASE TO user01 CONTAINER=ALL;
+  GRANT FLASHBACK ANY TABLE TO user01 CONTAINER=ALL;
+  GRANT SELECT ANY TABLE TO user01 CONTAINER=ALL;
+  GRANT SELECT_CATALOG_ROLE TO user01 CONTAINER=ALL;
+  GRANT EXECUTE_CATALOG_ROLE TO user01 CONTAINER=ALL;
+  GRANT SELECT ANY TRANSACTION TO user01 CONTAINER=ALL;
+  GRANT SELECT ANY DICTIONARY TO user01 CONTAINER=ALL;
+  GRANT LOGMINING TO user01 CONTAINER=ALL;
+
+  GRANT CREATE TABLE TO user01 CONTAINER=ALL;
+  GRANT LOCK ANY TABLE TO user01 CONTAINER=ALL;
+  GRANT CREATE SEQUENCE TO user01 CONTAINER=ALL;
+
+  GRANT EXECUTE ON DBMS_LOGMNR TO user01 CONTAINER=ALL;
+  GRANT EXECUTE ON DBMS_LOGMNR_D TO user01 CONTAINER=ALL;
+  GRANT SELECT ON V_$LOGMNR_LOGS TO user01 CONTAINER=ALL;
+  GRANT SELECT ON V_$LOGMNR_CONTENTS TO user01 CONTAINER=ALL;
+  GRANT SELECT ON V_$LOGFILE TO user01 CONTAINER=ALL;
+  GRANT SELECT ON V_$ARCHIVED_LOG TO user01 CONTAINER=ALL;
+  GRANT SELECT ON V_$ARCHIVE_DEST_STATUS TO user01 CONTAINER=ALL;
+
+  exit;
+EOF
+
+sqlplus sys/Admin12340@//localhost:1521/XEPDB1 as sysdba <<- EOF
+  CREATE USER debezium IDENTIFIED BY admin1234;
+  GRANT CONNECT TO debezium;
+  GRANT CREATE SESSION TO debezium;
+  GRANT CREATE TABLE TO debezium;
+  GRANT CREATE SEQUENCE to debezium;
+  ALTER USER debezium QUOTA 100M on users;
+  exit;
+EOF
